@@ -922,13 +922,18 @@ console.log('🔗 API_BASE:', API_BASE);
             // Получаем данные от AI
             const confidence = data.confidence || 70;
             const recommendedBet = data.recommended_bet || 'Анализ';
+            const coefficient = data.coefficient || null;
             const analysisText = data.analysis || data.description || '';
             
             // Отображаем уверенность AI
             confidenceValue.textContent = confidence + '%';
             
-            // Отображаем рекомендованную ставку
-            signalValue.textContent = recommendedBet;
+            // Отображаем рекомендованную ставку с коэффициентом
+            if (coefficient) {
+                signalValue.innerHTML = `${recommendedBet}<br><span class="text-emerald-400 text-xl">Кеф: ${coefficient}</span>`;
+            } else {
+                signalValue.textContent = recommendedBet;
+            }
             
             // Генерируем статистику событий на основе уверенности AI
             const baseConfidence = confidence;

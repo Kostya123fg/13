@@ -930,7 +930,7 @@ console.log('🔗 API_BASE:', API_BASE);
             
             // Отображаем рекомендованную ставку с коэффициентом
             if (coefficient) {
-                signalValue.innerHTML = `${recommendedBet}<br><span class="text-emerald-400 text-xl">Кеф: ${coefficient}</span>`;
+                signalValue.textContent = `${recommendedBet} (${coefficient})`;
             } else {
                 signalValue.textContent = recommendedBet;
             }

@@ -864,6 +864,7 @@ console.log('🔗 API_BASE:', API_BASE);
 
             const formData = new FormData();
             formData.append('image', selectedFile);
+            formData.append('category', categorySelect.value);
             if (userId) {
                 formData.append('user_id', userId);
             }

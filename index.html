@@ -236,7 +236,7 @@
                 <!-- Signal -->
                 <div class="card p-4">
                     <div class="text-gray-400 text-xs mb-1">НАДЕЖНЫЙ СИГНАЛ</div>
-                    <div id="signalValue" class="text-white text-sm font-semibold leading-tight"></div>
+                    <div id="signalValue" class="text-white text-sm font-semibold leading-tight">Тотал меньше 2.5</div>
                 </div>
             </div>
 
@@ -864,7 +864,7 @@ console.log('🔗 API_BASE:', API_BASE);
 
             const formData = new FormData();
             formData.append('image', selectedFile);
-            formData.append('category', categorySelect.value);
+            formData.append('sport', categorySelect.value);
             if (userId) {
                 formData.append('user_id', userId);
             }
@@ -923,23 +923,23 @@ console.log('🔗 API_BASE:', API_BASE);
             // Получаем данные от AI
             const confidence = data.confidence || 70;
             const recommendedBet = data.recommended_bet || 'Анализ';
-            const coefficient = data.coefficient || null;
             const analysisText = data.analysis || data.description || '';
             
             // Отображаем уверенность AI
             confidenceValue.textContent = confidence + '%';
             
-            // Отображаем рекомендованную ставку с коэффициентом
-            if (coefficient) {
-                signalValue.textContent = `${recommendedBet} (${coefficient})`;
-            } else {
-                signalValue.textContent = recommendedBet;
-            }
+            // Отображаем рекомендованную ставку
+            signalValue.textContent = recommendedBet;
             
             // Генерируем статистику событий на основе уверенности AI
+            // Основная ставка получает процент уверенности
+            // Остальные варианты - рассчитываются относительно
             const baseConfidence = confidence;
             const stats = [
-                { label: recommendedBet, percent: baseConfidence }
+                { label: recommendedBet, percent: baseConfidence },
+                { label: 'Тотал > 2.5', percent: Math.max(40, 100 - baseConfidence - 5) },
+                { label: 'Тотал < 3.5', percent: Math.max(45, baseConfidence - 18) },
+                { label: 'Обе забьют? Да', percent: Math.max(50, baseConfidence - 10) }
             ];
             
             eventStats.innerHTML = stats.map(stat => `
@@ -964,7 +964,6 @@ console.log('🔗 API_BASE:', API_BASE);
             
             analyticsText.innerHTML = formatted;
         }
-
 
         function showError(message, purchaseUrl = null, purchaseText = null) {
             // Очищаем предыдущее содержимое
